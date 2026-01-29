@@ -21,3 +21,10 @@ To make histograms for all fit parameter and derived parameter distributions, us
 The data file is formatted where each line contains all of the angular data for a transition in a single line. The format is: `<peak> <theta bin 1 counts> <theta bin 1 error> ...` where any number of theta bins > 1 can be used. See `example_data.dat` 
 
 The source file contains the 152Eu source information. The first column is the center of each theta bin. The number of theta bins for the source file must match the number for the data file. The second column is the number of counts at the corresponding theta for the 1408 peak. The third column is the error on the counts. See `source.dat`
+
+## Formalism
+The angular distribution $W(\theta)$ is the distribution of gamma-ray intensity, which requires knowing $\epsilon(E,\theta_i)$, which is the efficiency of observing the lab frame gamma-ray energy in the polar angle cut at $\theta_i$. This efficiency is calculated according to the following. The total GRETINA singles efficiency for a gamma ray that is Doppler shifted according to angle $\theta_i$ is $\epsilon\left(E \gamma (1-\beta\cos\theta_i)\right)$ where $\epsilon(E)$ is given by equation \ref{eq:efficiency-curve}. The total efficiency at the Doppler-shifted energy is then scaled according to the fractional angular coverage in GRETINA of the angle bin. The fractional angular coverage can be found by sorting source data according to the same polar angle cuts and obtaining the full energy peak counts of a transition within each angle cut. The 1408-keV peak from ${}^{152}\mathrm{Eu}$ was used to obtain the fractional angular coverage for GRETINA. The efficiency $\epsilon(E,\theta)$ can be expressed as:
+
+$\epsilon(E,\theta_i) = \epsilon(E\gamma(1-\beta\cos\theta_i)) \frac{N^{1408}_i}{\sum_j{N^{1408}_j}}$
+
+where $N^{1408}_i$ is the number of 1408-keV ${}^{152}\mathrm{Eu}$ source counts within the angle bin $\theta_i$. This is implemented in the function `adRatios()`.
