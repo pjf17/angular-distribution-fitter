@@ -5,7 +5,7 @@ from ROOT import TF1, TLine, TLatex, TGraphErrors, TLegend, TCanvas, gStyle
 
 sys.path.append("modules")
 from measurement import Measurement
-from angular_analyze import AngularDistribution, adRatios, readSourceFile, readDataFile, doFit
+from angular_analyze import AngularDistribution, adRatios, readSourceFile, readDataFile, readStatsFile, doFit
 
 NUC = {'12Ex': 0.335}
 
@@ -22,13 +22,24 @@ def psuedoH1(Xdata,Yerr,AngDist):
 if __name__ == "__main__":
     if len(sys.argv) < 9:
         print("Not enough arguments, please enter the following arguments:")
-        print("<source file> <data file> <Beta> <Algn Type (P/O)> <E> <Ji> <Jf> <Mix> <# of pseudo experiments (optional)>")
+        print("<source file> <data file> <Beta> <Algn Type (P/O)> <E> <Ji> <Jf> <Mix> <(optional) dual option>")
+        print("The last argument can either be:") 
+        print("> number of pseudo experiments to run to obtain parameter distributions")
+        print("OR")
+        print("> .stats file after analyzing pseudodata to add the p-values to the plot legend")
         sys.exit(1)
 
     #read in the data
     theta, srce = readSourceFile(sys.argv[1])
     data = readDataFile(sys.argv[2])
     peak = int(sys.argv[5])
+
+    # read in the optional last argument
+    nExp = 0 #number of pseudo data experiments
+    H0_pval = H1_pval = None #get p-values for dchi2 and chi2
+    if len(sys.argv) == 10:
+        if sys.argv[9].isnumeric(): nExp = int(sys.argv[9])
+        else: H0_pval, H1_pval = readStatsFile(sys.argv[9])
 
     #get the beta, check for nucleus code
     beta = 0
@@ -41,11 +52,6 @@ if __name__ == "__main__":
     else:
         beta = float(sys.argv[3])
         plttitle = "#beta = " + f"{beta:.3f}"
-
-    #check how many pseudo experiments to run
-    nExp = 0
-    if len(sys.argv) == 10:
-        nExp = int(sys.argv[9])
 
     #initialize angular distribution properties
     AD = AngularDistribution(sys.argv[6],sys.argv[7],sys.argv[8],sys.argv[4],beta,theta)
@@ -122,7 +128,9 @@ if __name__ == "__main__":
         fitFunc = TF1("fleg", wrapper, 0,180, 2)
         fitFunc.SetParameters(f1.GetParameters())
         legend.AddEntry(fitFunc,f"{AD.Ii} #rightarrow {AD.If}","l")
+        if H1_pval is not None: legend.AddEntry(0,"p(#chi^{2})= "+f"{H1_pval:.2f}","")
         legend.AddEntry(flat,"Iso","l")
+        if H0_pval is not None: legend.AddEntry(0,"p(#Delta#chi^{2})= "+f"{H0_pval:.2f}","")
         
         #draw Plot title
         latex = TLatex()

@@ -6,7 +6,7 @@ from measurement import Measurement
 import angular_formalism as adf
 
 #================================================================================
-#functions for reading in the data and source files, these each contain different
+#functions for reading in the data, source, and stats files, these each contain different
 #types of info, so they have slightly different file formats
 #================================================================================
 def readDataFile(filename):
@@ -56,6 +56,25 @@ def readSourceFile(filename):
                 
                     
         return theta, data
+    
+    except FileNotFoundError:
+        raise FileNotFoundError("File '{:f}' not found".format(filename))
+
+def readStatsFile(filename):
+    # read in values from the stats files so they can be added to the TLegend
+    try:
+        data_dict = {}
+        with open(filename, 'r') as file:
+            for line in file:
+                parts = line.split(':')
+                data_dict[parts[0]] = parts[1]
+
+            pH0 = float(data_dict["h0_dchi2"])
+            pH1 = float(data_dict["h1_chi2"])
+            # align = (float(data_dict["align"].split()[1]),float(data_dict["align"].split()[2]))
+            # pol = (float(data_dict["pol"].split()[1]),float(data_dict["pol"].split()[2]))
+
+        return pH0, pH1 #, align, pol
     
     except FileNotFoundError:
         raise FileNotFoundError("File '{:f}' not found".format(filename))
