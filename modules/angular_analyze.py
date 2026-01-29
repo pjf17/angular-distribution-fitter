@@ -15,9 +15,11 @@ def readDataFile(filename):
     try:
         with open(filename, 'r') as file:
             for line_number, line in enumerate(file, 1):
+                # Skip header
+                if line_number == 1: continue
+
                 # Skip empty lines
-                if line.strip() == "":
-                    continue
+                if line.strip() == "": continue
                     
                 # Split the line into parts and remove extra whitespace
                 parts = line.split()
@@ -28,7 +30,7 @@ def readDataFile(filename):
                 for i in range(nDataPoints):
                     val = float(parts[i*2+1])
                     err = float(parts[i*2+2])
-                    points.append(Measurement(val,err));
+                    points.append(Measurement(val,err))
 
                 data.update({peak: points})
                     
@@ -44,9 +46,11 @@ def readSourceFile(filename):
     try:
         with open(filename, 'r') as file:
             for line_number, line in enumerate(file, 1):
+                # Skip header
+                if line_number == 1: continue
+                
                 # Skip empty lines
-                if line.strip() == "":
-                    continue
+                if line.strip() == "": continue
                     
                 # Split the line into parts and remove extra whitespace
                 parts = line.split()

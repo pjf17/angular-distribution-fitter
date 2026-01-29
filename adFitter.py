@@ -35,6 +35,11 @@ if __name__ == "__main__":
     theta, srce = readSourceFile(sys.argv[1])
     data = readDataFile(sys.argv[2])
     peak = int(sys.argv[5])
+    
+    #check if number of theta bin centers match the data points
+    if len(theta) is not len(data[next(iter(data))]):
+        print("Error: Peak data points do not match number of theta bin centers")
+        sys.exit(1)
 
     # read in the optional last argument
     nExp = 0 #number of pseudo data experiments

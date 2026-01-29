@@ -2,7 +2,7 @@
 This python script will plot and fit angular distribution data to obtain the alignment and degree of polarization percentages. It uses [SymPy](https://www.sympy.org/en/index.html), [Numpy](https://numpy.org), [SciPy](https://scipy.org), and [PyROOT](https://root.cern/manual/python/) (tested using with ROOT version 6.28.04). 
 
 ![](output.svg)
-
+## Running
 The figure above was generated using the following command:
 `python3 -i adFitter.py source.dat example_data.dat 12Ex Obl 2311 4 2 0.0`
 
@@ -16,3 +16,8 @@ To make histograms for all fit parameter and derived parameter distributions, us
 `python3 -i adFitter.py source.dat example_data.dat 12Ex Obl 2311 4 2 0.0 <your matching .stats file>`
 
 `makeDistHists.py` also generates a `.root` file containing all histograms of the parameter distributions that can be inspected in the root browser
+
+## Input Files
+The data file is formatted where each line contains all of the angular data for a transition in a single line. The format is: `<peak> <theta bin 1 counts> <theta bin 1 error> ...` where any number of theta bins > 1 can be used. See `example_data.dat` 
+
+The source file contains the 152Eu source information. The first column is the center of each theta bin. The number of theta bins for the source file must match the number for the data file. The second column is the number of counts at the corresponding theta for the 1408 peak. The third column is the error on the counts. See `source.dat`
