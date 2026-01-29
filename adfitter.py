@@ -22,7 +22,7 @@ def psuedoH1(Xdata,Yerr,AngDist):
 if __name__ == "__main__":
     if len(sys.argv) < 9:
         print("Not enough arguments, please enter the following arguments:")
-        print("<source file> <data file> <Beta> <Algn Type (P/O)> <E> <Ji> <Jf> <Mix> <Nexp (opt)>")
+        print("<source file> <data file> <Beta> <Algn Type (P/O)> <E> <Ji> <Jf> <Mix> <# of pseudo experiments (optional)>")
         sys.exit(1)
 
     #read in the data
