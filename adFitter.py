@@ -7,6 +7,8 @@ sys.path.append("modules")
 from measurement import Measurement
 from angular_analyze import AngularDistribution, adRatios, readSourceFile, readDataFile, readStatsFile, doFit
 
+# dictionary for the beta (v/c) values for a specific nucleus can be added here
+# easier to remember the species than what velocity it was traveling at
 NUC = {'12Ex': 0.335}
 
 def psuedoH0(Xdata,Yerr):
