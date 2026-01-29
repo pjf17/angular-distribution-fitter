@@ -14,3 +14,5 @@ To make histograms for all fit parameter and derived parameter distributions, us
 
 `makeDistHists.py` also generates a `.stats` file that contains hypothesis test and best fit p-values that can be added to the angular distribution fit legend. This can be plotted using:
 `python3 -i adFitter.py source.dat example_data.dat 12Ex Obl 2311 4 2 0.0 <your matching .stats file>`
+
+`makeDistHists.py` also generates a `.root` file containing all histograms of the parameter distributions that can be inspected in the root browser
