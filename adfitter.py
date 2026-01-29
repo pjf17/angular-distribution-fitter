@@ -2,6 +2,8 @@ import sys
 import warnings
 import numpy as np
 from ROOT import TF1, TLine, TLatex, TGraphErrors, TLegend, TCanvas, gStyle
+
+sys.path.append("modules")
 from measurement import Measurement
 from angular_analyze import AngularDistribution, adRatios, readSourceFile, readDataFile, doFit
 
