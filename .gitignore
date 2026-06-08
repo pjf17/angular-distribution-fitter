@@ -1,4 +1,6 @@
 modules/__pycache__
 *.root
 *.stats
-pseudo_data*.dat
+*.pdf
+*.dat
+*.C

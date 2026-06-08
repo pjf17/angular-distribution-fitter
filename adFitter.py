@@ -9,7 +9,7 @@ from angular_analyze import AngularDistribution, adRatios, readSourceFile, readD
 
 # dictionary for the beta (v/c) values for a specific nucleus can be added here
 # easier to remember the species than what velocity it was traveling at
-NUC = {'12Ex': 0.335}
+NUC = {'46Ar': 0.3346, '41S': 0.339, '40S': 0.34, '49Ca': 0.345}
 
 def psuedoH0(Xdata,Yerr):
     #generate pseudo data according to the null hypothesis (isotropic distribution)
@@ -55,10 +55,10 @@ if __name__ == "__main__":
         beta = NUC[sys.argv[3]]
         plttitle = "^{" + sys.argv[3][:2] + "}" + sys.argv[3][2:]  
         plttitle = plttitle + ", E_{#gamma} = " + sys.argv[5] 
-        plttitle = plttitle + ", #beta = " + f"{beta:.3f}"
+        plttitle = plttitle + ", v/c = " + f"{beta:.4f}"
     else:
         beta = float(sys.argv[3])
-        plttitle = "#beta = " + f"{beta:.3f}"
+        plttitle = "v/c = " + f"{beta:.4f}"
 
     #initialize angular distribution properties
     AD = AngularDistribution(sys.argv[6],sys.argv[7],sys.argv[8],sys.argv[4],beta,theta)
@@ -104,26 +104,38 @@ if __name__ == "__main__":
         AD.Print()
 
         #set up plot
-        ymax = 1.5
-        ymin = 0.7
+        ymax = 1.45
+        ymin = 0.75
+        topMarg = 0.02
+        botMarg = 0.12
+        # yToNDC = (1.0 - topMarg - botMarg)/(ymax-ymin)
+        # yNDCshift = 1.0 - topMarg - ymax*yToNDC
         gStyle.SetPadLeftMargin(0.12)
         gStyle.SetPadRightMargin(0.04)
-        gStyle.SetPadTopMargin(0.02)
-        legend = TLegend(0.65,0.78,0.96,0.98)
-        canv = TCanvas("canv","canv",600,600)
+        gStyle.SetPadTopMargin(topMarg)
+        gStyle.SetPadBottomMargin(botMarg)
+        legend = TLegend(0.7,0.68,0.96,0.98) if f1.Eval(180) < 1.05 else TLegend(0.7,0.18,0.96,0.48)
+        # canv = TCanvas("canv","canv",600,600)
+        canv = TCanvas("canv","canv",600,400)
 
         #draw the frame
         haxis = canv.DrawFrame(0,ymin,180,ymax)
 
         #configure axes
-        haxis.GetXaxis().SetTitle("#theta [#circ]")
-        haxis.GetXaxis().SetTitleSize(0.055)
+        haxis.GetXaxis().SetTitle("#theta (#circ)")
+        haxis.GetXaxis().CenterTitle()
+        haxis.GetXaxis().SetTitleFont(43)
+        haxis.GetXaxis().SetTitleSize(25)
         haxis.GetXaxis().SetTitleOffset(0.9)
-        haxis.GetXaxis().SetLabelSize(0.042)
+        haxis.GetXaxis().SetLabelFont(43)
+        haxis.GetXaxis().SetLabelSize(22)
         haxis.GetYaxis().SetTitle("W(#theta)/W(#theta)_{iso}")
-        haxis.GetYaxis().SetTitleSize(0.05)
-        haxis.GetYaxis().SetTitleOffset(1.08)
-        haxis.GetYaxis().SetLabelSize(0.042)
+        haxis.GetYaxis().CenterTitle()
+        haxis.GetYaxis().SetTitleFont(43)
+        haxis.GetYaxis().SetTitleSize(25)
+        haxis.GetYaxis().SetTitleOffset(1.3)
+        haxis.GetYaxis().SetLabelFont(43)
+        haxis.GetYaxis().SetLabelSize(22)
         
         #configure the flat function
         flat = TLine(0,1.0,180,1.0)
@@ -141,15 +153,15 @@ if __name__ == "__main__":
         
         #draw Plot title
         latex = TLatex()
-        latex.SetTextSize(0.048)
-        latex.SetTextFont(42)
+        latex.SetTextFont(43)
+        latex.SetTextSize(23)
         latex.DrawLatex(5,(ymax-ymin)*0.92 + ymin,plttitle)
 
         #draw everything
         ADpoints.Draw("P same")
         fitFunc.Draw("same")
-        legend.Draw("same")
         flat.Draw("same")
+        legend.Draw("same")
 
     # Don't plot the fit, but instead run psuedo experiments to get the uncertainties on the
     # fit parameters
