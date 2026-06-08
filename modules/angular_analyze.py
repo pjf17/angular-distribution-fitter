@@ -3,6 +3,7 @@ from scipy.special import legendre
 from scipy.special import lpmv
 from scipy.optimize import curve_fit
 from measurement import Measurement
+from sympy import S
 import angular_formalism as adf
 
 #================================================================================
@@ -219,7 +220,7 @@ class AngularDistribution:
 
         self.A = {x: float(adf.A_k(x,self.delta.value,self.L,self.L+1,self.If,self.Ii)) for x in range(0,2*(self.L+2),2)}
         self.Ap = {x: float(adf.Ap_k(x,self.delta.value,self.L,self.L+1,self.If,self.Ii)) for x in range(0,2*(self.L+2),2)}
-        self.B = {x: float(adf.B_k(x,self.Ii,self.sigma.value,self.align)) for x in range(0,2*(self.L+2),2)}
+        self.B = {x: float(adf.B_k(x,Ii=self.Ii,sigma=self.sigma.value,aligntype=self.align)) for x in range(0,2*(self.L+2),2)}
         self.a = {x: self.A[x]*self.B[x] for x in range(0,2*(self.L+2),2)}
     
     def calcPol(self,lo = 47,hi = 107,n=100):
@@ -250,7 +251,7 @@ class AngularDistribution:
 
     def calcAlign(self):
         #return the Alignment percentage
-        return float(self.B[2]/adf.B_k(2,self.Ii,0.0,self.align))*100
+        return float(self.B[2]/adf.B_k(2,Ii=self.Ii,sigma=0.0,aligntype=self.align))*100
 
     def calcFlatChi2(self,ratio,err=None):
         #get chi2 under assumption that the distribution is constant =1
@@ -282,7 +283,7 @@ class AngularDistribution:
     def TF1W(self, x, par):
         #the angular distribution fit function for ROOT Tf1
         #the fit parameters enter into the coefficients, par[0] = sigma, par[1] = delta
-        A = {k: float(adf.A_k(k,par[1],self.L,self.L+1,self.If,self.Ii))*float(adf.B_k(k,self.Ii,par[0],self.align)) for k in range(0,2*(self.L+2),2)}
+        A = {k: float(adf.A_k(k,par[1],self.L,self.L+1,self.If,self.Ii))*float(adf.B_k(k,Ii=self.Ii,sigma=par[0],aligntype=self.align)) for k in range(0,2*(self.L+2),2)}
         cosCm = (np.cos(x[0]*np.pi/180) - self.beta)/(1 - self.beta*np.cos(x[0]*np.pi/180))
         
         norm = 0
@@ -297,7 +298,7 @@ class AngularDistribution:
     def W(self, x, par):
         #the angular distribution fit function 
         #the fit parameters enter into the coefficients, par[0] = sigma, par[1] = delta
-        A = {k: float(adf.A_k(k,par[1],self.L,self.L+1,self.If,self.Ii))*float(adf.B_k(k,self.Ii,par[0],self.align)) for k in range(0,2*(self.L+2),2)}
+        A = {k: float(adf.A_k(k,par[1],self.L,self.L+1,self.If,self.Ii))*float(adf.B_k(k,Ii=self.Ii,sigma=par[0],aligntype=self.align)) for k in range(0,2*(self.L+2),2)}
         cosCm = (np.cos(x*np.pi/180) - self.beta)/(1 - self.beta*np.cos(x*np.pi/180))
         
         norm = 0
